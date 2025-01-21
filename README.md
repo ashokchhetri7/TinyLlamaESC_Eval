@@ -1,4 +1,4 @@
-# Conversational Model Evaluation with ESConv
+# Rubric-based ESC Analysis on Context-size and External Knowledge in LLM
 
 This repository provides a script for evaluating conversational AI models using the ESConv dataset. The script leverages the TinyLlama pre-trained language model to predict responses in a conversational context and compares them with the dataset's ground truth. It utilizes the Hugging Face Transformers library and PyTorch.
 

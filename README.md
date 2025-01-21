@@ -5,7 +5,8 @@ This repository provides a comprehensive framework for generating dialogues, eva
 1. **Generate Dialogues**: Run the script to generate conversational responses using the model and dataset.
 2. **Process the Generated JSON Dataset**: Save the outputs as a JSONLines file for further evaluation.
 3. **Evaluate and Analyze Results**: Run the evaluation script to score the generated responses. Pre-calculated results are available in the `/Results` folder for reference.
-  - The evaluation script processes the generated dataset, sends requests to a scoring server, and calculates the mean score based on rubric criteria. The results are displayed in the terminal, and pre-calculated results are saved in the `/Results` folder.
+
+   - The evaluation script processes the generated dataset, sends requests to a scoring server, and calculates the mean score based on rubric criteria. The results are displayed in the terminal, and pre-calculated results are saved in the `/Results` folder.
 
 ---
 
@@ -69,7 +70,31 @@ Run the evaluation script to score the generated dialogues using rubric-based cr
 python Evaluation/eval_prometheus_incontext.py
 ```
 
-The evaluation script processes the generated dataset, calculates scores based on fluency, relevance, and constructiveness, and displays the results in the terminal. Pre-calculated results are saved in the `/Results` folder for further analysis.
+The evaluation script processes the generated dataset, calculates scores based on rubric criteria, and displays the results in the terminal. Pre-calculated results are saved in the `/Results` folder for further analysis.
+
+### Results Table
+
+#### Table: Results for Different Model Configurations
+
+\label{table:tableforablation}
+\begin{tabular*}{\hsize}{@{}@{\extracolsep{\fill}}ccc|ccccc@{}}
+\toprule
+\multicolumn{3}{c|}{\textbf{Model Configuration}} & \multicolumn{5}{c}{\textbf{Rubrics Scores}} \\
+\cmidrule(lr){1-3}
+\cmidrule(lr){4-8}
+\textbf{Model} & \textbf{Context Size} & \textbf{External Knowledge} & \textbf{Empathy} & \textbf{Fluency} & \textbf{Identify} & \textbf{Comfort} & \textbf{Suggest}\\
+\midrule
+KEMI & Blocks & strategy-comet-heal & 2.04 & 2.16 & 1.85 & 1.75 & 1.51 \\
+KEMI & Blocks & strategy & 2.04 & 2.50 & 1.79 & 1.98 & 1.51 \\
+\midrule
+Tiny-Know & Blocks & strategy-comet-heal & 2.24 & 2.48 & 1.86 & 1.70 & 1.79 \\
+Tiny-Stand & Blocks & strategy & 2.29 & 2.56 & 2.11 & 2.23 & 2.44 \\
+\midrule
+Tiny-Role & Whole & strategy-comet-heal-role & 1.87 & 2.03 & 1.72 & 1.50 & 1.48 \\
+Tiny-Stand & Whole & strategy & \textbf{2.30} & \textbf{2.57} & \textbf{2.14} & \textbf{2.25} & \textbf{2.74} \\
+\bottomrule
+\end{tabular*}
+\end{table}
 
 ---
 
@@ -81,6 +106,20 @@ The evaluation script processes the generated dataset, calculates scores based o
 4. **Response Generation**: The model generates responses based on the conversational context.
 5. **Evaluation**: Predictions are scored using a rubric-based system, considering fluency, relevance, and constructiveness.
 6. **Result Logging**: Predictions and evaluation scores are saved for analysis.
+
+---
+
+## Rubric-based Evaluation
+
+Generated responses are evaluated based on the following criteria:
+
+1. **Fluency**: The coherence and smoothness of the response.
+2. **Identification**: The effectiveness of the speaker in identifying and addressing the seeker’s problems.
+3. **Empathy**: The level of empathetic understanding displayed by the speaker towards the seeker’s feelings and situation.
+4. **Suggestion**: The quality of the suggestions offered by the speaker.
+5. **Comforting**: The ability to make the seeker calm and relaxed by providing emotional support.
+
+Evaluation scores and feedback are recorded in the `/Results` folder for detailed analysis.
 
 ---
 
@@ -104,18 +143,6 @@ gen_kwargs = dict(
     max_new_tokens=128,
 )
 ```
-
----
-
-## Rubric-based Evaluation
-
-Generated responses are evaluated based on the following criteria:
-
-- **Fluency**: Measures coherence and grammatical correctness.
-- **Relevance**: Evaluates how well the response aligns with the user's query.
-- **Constructiveness**: Assesses the usefulness and specificity of suggestions or advice.
-
-Evaluation scores and feedback are recorded in the `/Results` folder for detailed analysis.
 
 ---
 

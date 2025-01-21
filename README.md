@@ -8,6 +8,8 @@ This repository provides a comprehensive framework for generating dialogues, eva
 
    - The evaluation script processes the generated dataset, sends requests to a scoring server, and calculates the mean score based on rubric criteria. The results are displayed in the terminal, and pre-calculated results are saved in the `/Results` folder.
 
+   - You can customize the rubric used for evaluation by modifying the `rubrics_for_testing.txt` file. Example rubrics are provided in this file, detailing evaluation criteria such as empathy, fluency, identification, comforting, and suggestions.
+
 ---
 
 ## Features
@@ -71,6 +73,18 @@ python Evaluation/eval_prometheus_incontext.py
 ```
 
 The evaluation script processes the generated dataset, calculates scores based on rubric criteria, and displays the results in the terminal. Pre-calculated results are saved in the `/Results` folder for further analysis.
+
+You can customize the evaluation rubrics by editing the `rubrics_for_testing.txt` file. The rubrics specify scoring criteria for various aspects, such as empathy, fluency, identification, comforting, and suggestions. Below is an example rubric:
+
+```plaintext
+[Empathy: Is the model able to identify and react correctly to the emotional context of the user's input?]
+Score 1: The model utterly fails to grasp the user's emotional context and responds in an unfitting manner.
+Score 5: The model flawlessly identifies the emotional context and consistently responds in a considerate and empathetic manner.
+
+[Fluency: How well does the model's response demonstrate command over language?]
+Score 1: The response is incoherent, filled with grammatical errors, and difficult to understand.
+Score 5: The response is perfectly fluent, with no grammatical errors, demonstrating excellent command of language.
+```
 
 ### Results Table
 

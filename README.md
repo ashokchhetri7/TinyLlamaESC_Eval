@@ -1,15 +1,22 @@
 # Rubric-based ESC Analysis on Context-size and External Knowledge in LLM
 
-This repository provides a script for evaluating conversational AI models using the ESConv dataset. The script leverages the TinyLlama pre-trained language model to predict responses in a conversational context and compares them with the dataset's ground truth. It utilizes the Hugging Face Transformers library and PyTorch.
+This repository provides a comprehensive framework for generating dialogues, evaluating model performance, and analyzing results based on rubric-based scoring. The flow of the program is structured as follows:
+
+1. **Generate Dialogues**: Run the script to generate conversational responses using the model and dataset.
+2. **Process the Generated JSON Dataset**: Save the outputs as a JSONLines file for further evaluation.
+3. **Evaluate and Analyze Results**: Run the evaluation script to score the generated responses. Pre-calculated results are available in the `/Results` folder for reference.
+  - The evaluation script processes the generated dataset, sends requests to a scoring server, and calculates the mean score based on rubric criteria. The results are displayed in the terminal, and pre-calculated results are saved in the `/Results` folder.
 
 ---
 
 ## Features
+
 - **Dataset Handling**: Uses the ESConv dataset from Hugging Face.
 - **Pre-trained Model**: Supports TinyLlama or any other Hugging Face-compatible language model.
 - **In-Context Learning**: Generates responses using conversational history.
 - **Customizable Parameters**: Adjust model name, dataset, and generation settings.
 - **Results Logging**: Outputs predictions to a JSONLines file for further analysis.
+- **Rubric-based Evaluation**: Scores generated responses based on fluency, relevance, and usefulness.
 
 ---
 
@@ -35,33 +42,34 @@ pip install torch transformers datasets fire tqdm jsonlines
 
 ## Usage
 
-To run the script, use the following command in your terminal:
+### Step 1: Generate Dialogues
+Run the script to generate dialogues based on the provided dataset and model:
 
 ```bash
-python <script_name>.py --model_name "Ashokajou51/esconv-tinyllama-plm" --revision "epoch-3"
+python <script_name>.py --model_name "Ashokajou51/esconv-sorted-incontext-tinyllama-plm" --revision "epoch-3"
 ```
 
-### Arguments
+#### Arguments
 
-- `model_name` (str): The Hugging Face model name. Default: `Ashokajou51/esconv-tinyllama-plm`
+- `model_name` (str): The Hugging Face model name. Default: `Ashokajou51/esconv-sorted-incontext-tinyllama-plm`
 - `revision` (Optional[str]): The model revision or checkpoint. Default: `epoch-3`
 
-### Example
-
-```bash
-python main.py --model_name "Ashokajou51/esconv-tinyllama-plm" --revision "epoch-3"
-```
-
----
-
-## Output
-
-The script generates a JSONLines file named `<model_name>_<revision>.json`. Each line contains the following information:
+### Step 2: Process the Generated Dataset
+The output will be saved as a JSONLines file named `GeneratedDataset/<model_name>_<revision>.json`. This file contains the generated dialogues and relevant metadata:
 
 - `turn_index`: The turn index in the conversation.
-- `role`: The role of the speaker (user/assistant).
-- `content`: The ground truth content of the response.
+- `context`: The conversation context leading to the prediction.
 - `prediction`: The model's predicted response.
+- `reference`: The ground truth response for the given context.
+
+### Step 3: Evaluate and Analyze Results
+Run the evaluation script to score the generated dialogues using rubric-based criteria:
+
+```bash
+python Evaluation/eval_prometheus_incontext.py
+```
+
+The evaluation script processes the generated dataset, calculates scores based on fluency, relevance, and constructiveness, and displays the results in the terminal. Pre-calculated results are saved in the `/Results` folder for further analysis.
 
 ---
 
@@ -71,13 +79,15 @@ The script generates a JSONLines file named `<model_name>_<revision>.json`. Each
 2. **Mapping Conversations**: Dialogues are structured into roles (`user` and `assistant`) with contextual metadata.
 3. **Tokenization**: Conversational history is tokenized using the specified model's tokenizer.
 4. **Response Generation**: The model generates responses based on the conversational context.
-5. **Result Logging**: Predictions are saved alongside the ground truth for evaluation.
+5. **Evaluation**: Predictions are scored using a rubric-based system, considering fluency, relevance, and constructiveness.
+6. **Result Logging**: Predictions and evaluation scores are saved for analysis.
 
 ---
 
 ## Customization
 
 ### Modify Dataset
+
 You can replace the dataset with another Hugging Face dataset by changing the `dataset_name` in the script:
 
 ```python
@@ -85,18 +95,32 @@ dataset_name = "your_dataset_name"
 ```
 
 ### Adjust Generation Parameters
+
 Edit the `gen_kwargs` dictionary to fine-tune the model's generation behavior:
 
 ```python
 gen_kwargs = dict(
-    do_sample=True,
+    do_sample=False,
     max_new_tokens=128,
 )
 ```
 
 ---
 
+## Rubric-based Evaluation
+
+Generated responses are evaluated based on the following criteria:
+
+- **Fluency**: Measures coherence and grammatical correctness.
+- **Relevance**: Evaluates how well the response aligns with the user's query.
+- **Constructiveness**: Assesses the usefulness and specificity of suggestions or advice.
+
+Evaluation scores and feedback are recorded in the `/Results` folder for detailed analysis.
+
+---
+
 ## Notes
+
 - Ensure that your system has a compatible GPU with CUDA enabled for faster processing.
 - Modify the `device` variable in the script if you want to use a different hardware setup (e.g., CPU).
 
@@ -106,7 +130,7 @@ gen_kwargs = dict(
 
 - [Hugging Face Transformers](https://huggingface.co/transformers/)
 - [PyTorch](https://pytorch.org/)
-- [ESConv Dataset](https://huggingface.co/datasets/Ashokajou51/ESConv_Original)
+- [ESConv Dataset](https://huggingface.co/datasets/Ashokajou51/ESConv_Sorted)
 - [Ashokajou51](https://huggingface.co/Ashokajou51)
 
 ---

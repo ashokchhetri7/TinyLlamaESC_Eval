@@ -1,0 +1,57 @@
+
+acc: 0.1985005355230275
+error: 0.0
+macro F1 0.14545154181595626
+{
+    "total_items": 2801,
+    "empty_items": 0,
+    "total_time_elapsed": 1.7308566570281982,
+    "bleu_1": {
+        "score": 0.13600328750235433,
+        "precisions": [
+            0.13600328750235433
+        ],
+        "brevity_penalty": 1.0,
+        "length_ratio": 1.1748742707704687,
+        "translation_length": 58403,
+        "reference_length": 49710,
+        "time_elapsed": 0.12396883964538574
+    },
+    "bleu_2": {
+        "score": 0.041378859517356925,
+        "precisions": [
+            0.13600328750235433,
+            0.012589475198733859
+        ],
+        "brevity_penalty": 1.0,
+        "length_ratio": 1.1748742707704687,
+        "translation_length": 58403,
+        "reference_length": 49710,
+        "time_elapsed": 0.16245532035827637
+    },
+    "bleu_4": {
+        "score": 0.007442688052924454,
+        "precisions": [
+            0.13600328750235433,
+            0.012589475198733859,
+            0.0024236456932952115,
+            0.0007394232498651052
+        ],
+        "brevity_penalty": 1.0,
+        "length_ratio": 1.1748742707704687,
+        "translation_length": 58403,
+        "reference_length": 49710,
+        "time_elapsed": 0.3517110347747803
+    },
+    "rouge": {
+        "rouge1": 0.13810143779493933,
+        "rouge2": 0.017029802826050735,
+        "rougeL": 0.1114022825758142,
+        "rougeLsum": 0.11149216913682918,
+        "time_elapsed": 0.9287643432617188
+    },
+    "f1": {
+        "score": 0.16068917391040954,
+        "time_elapsed": 0.1639571189880371
+    }
+}

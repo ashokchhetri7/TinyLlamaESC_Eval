@@ -16,7 +16,7 @@ def get_response(prompt: str, system: Optional[str] = "", temperature: Optional[
         "temperature": temperature,
         "greedy": greedy,
     }
-    output = requests.post("http://35.204.127.181:35020/instruct", json=body).json()
+    output = requests.post("http://34.147.57.161:35020/instruct", json=body).json()
     response = output['response']
     print(output)
     try:
@@ -44,12 +44,12 @@ Now you are having a conversation with a client. Generate an appropriate answer 
 {reference}
 
 ###Score Rubrics: 
-[Comforting: How effective is the model at providing comfort and emotional support in its response?]
-Score 1: The model's response fails to offer comfort or support, possibly exacerbating the user's distress.
-Score 2: The model's attempt to provide comfort is minimal and may not resonate with or adequately support the user's emotional needs.
-Score 3: The model offers a moderate level of comfort and support, somewhat addressing the user's emotional needs but lacking depth.
-Score 4: The model effectively provides comfort and emotional support, closely addressing the user's needs with thoughtful responses.
-Score 5: The model excels at offering profound comfort and emotional support, deeply resonating with and fully addressing the user's emotional state. """
+[Suggestion: How well does the model offer constructive suggestions or advice relevant to the user's expressed concerns?]
+Score 1: The model provides irrelevant or unhelpful suggestions that do not address the user's concerns.
+Score 2: The model offers suggestions that may have a vague relevance but largely miss the mark in terms of usefulness or applicability.
+Score 3: The model gives generally relevant suggestions, but they may lack specificity or full applicability to the user's situation.
+Score 4: The model provides relevant and practical suggestions that are mostly applicable to the user's expressed concerns.
+Score 5: The model offers insightful, specific, and highly relevant suggestions that directly address and provide actionable advice for the user's concerns."""
 
 
 # Function to remove strategy text, if present
@@ -57,7 +57,7 @@ def remove_strategy(x):
     return x.split("]", 1)[1].strip() if "]" in x else x
 
 # Load the JSON file format
-results = list(jsonlines.open("gen2.txt"))
+results = list(jsonlines.open("./gen2.txt"))
 total_scores = []
 
 for r in tqdm(results):

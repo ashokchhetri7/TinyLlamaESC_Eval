@@ -48,7 +48,7 @@ def remove_strategy(x):
     return x.split("]", 1)[1].strip() if "]" in x else x
 
 # Load the new JSON file format
-results = list(jsonlines.open("Ashokajou51_esconv-tinyllama-plm_epoch-3.json"))
+results = list(jsonlines.open("./GeneratedDataset/Ashokajou51_esconv-tinyllama-plm_epoch-3.json"))
 total_scores = []
 
 for r in tqdm(results):

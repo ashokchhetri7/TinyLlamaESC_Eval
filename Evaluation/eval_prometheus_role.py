@@ -1,12 +1,20 @@
 import requests
 from typing import List, Optional, Union
-import requests
-from typing import List, Optional, Union
 import jsonlines
 from tqdm.auto import tqdm
 import numpy as np
+import pdb
+import json
+import sys
 
-def get_response(prompt: str, system: Optional[str] = "", temperature: Optional[float] = 1.0, greedy: Optional[bool] = False):
+
+
+def get_response(
+    prompt: str, 
+    system: Optional[str] = "",
+    temperature: Optional[float] = 1.0,
+    greedy: Optional[bool] = False,
+):
     """
     Get a response from the model.
     """
@@ -19,20 +27,15 @@ def get_response(prompt: str, system: Optional[str] = "", temperature: Optional[
     output = requests.post("http://34.147.57.161:35020/instruct", json=body).json()
     response = output['response']
     print(output)
-    try:
-        score = response.split("[RESULT]", 1)[1].strip()
-        if "\n" in score:
-            score = score.split("\n", 1)[0]
-        score = int(score)  # Ensure score is an integer
-    except IndexError:
-        print("Error parsing score from response:", response)
-        score = 0  # Default score or handle appropriately
-    return output['response'], score
+    score = response.split("[RESULT]", 1)[1].strip()
+    if "\n" in score:
+        score = score.split("\n", 1)[0]
 
+    return output['response'], int(score)
 
 input_text = """###The instruction to evaluate: 
 You are a well-known emotional assistant who has a reputation for being empathetic and understanding. 
-Now you are having a conversation with a client. Generate an appropriate answer that will follow user's utterance.
+Now you are reviewing a conversation with a client. Your job is to generate an appropriate score given the user's utterance, response and the reference on the rubrics suggested below;
 
 [User]
 {dialog}
@@ -43,7 +46,7 @@ Now you are having a conversation with a client. Generate an appropriate answer 
 ###Reference Answer (Score 5): 
 {reference}
 
-###Score Rubrics: 
+# ###Score Rubrics: 
 [Suggestion: How well does the model offer constructive suggestions or advice relevant to the user's expressed concerns?]
 Score 1: The model provides irrelevant or unhelpful suggestions that do not address the user's concerns.
 Score 2: The model offers suggestions that may have a vague relevance but largely miss the mark in terms of usefulness or applicability.
@@ -52,33 +55,67 @@ Score 4: The model provides relevant and practical suggestions that are mostly a
 Score 5: The model offers insightful, specific, and highly relevant suggestions that directly address and provide actionable advice for the user's concerns."""
 
 
-# Function to remove strategy text, if present
 def remove_strategy(x):
-    return x.split("]", 1)[1].strip() if "]" in x else x
+    x = x.split("]", 1)[1].strip() if "]" in x else x
+    x = x.replace("</s>", "")
+    return x
 
-# Load the JSON file format
-results = list(jsonlines.open("gen2.txt"))
+def remove_knowledge(x):
+    x = x.split("[", 1)[0].strip() if "[" in x else x
+    x = x.replace("User:", "").strip()
+    return x
+
+
+results = list(jsonlines.open("./GeneratedDataset/Ashokajou51_esconv-sorted-role-tinyllama-plm_epoch-3.json"))
 total_scores = []
 
+counter = 0
 for r in tqdm(results):
-    try:
-        # Map the fields from the JSON entry to input_text variables
-        dialog = r.get('post', '')
-        prediction = r.get('generation', '')
-        reference = r.get('response', '')
 
-        # Process the dialogue, prediction, and reference through remove_strategy if needed
-        dialog = remove_strategy(dialog)
-        prediction = remove_strategy(prediction)
-        reference = remove_strategy(reference)
+    r["context"].pop(0)
+
+    if len(r["context"]) < 2:
+        continue
+
+    try:
+        dialog = ""
+        for turn in r["context"]:
+            if turn["role"] == "user":
+                dialog = remove_knowledge(turn["content"])
+                break
+
+        prediction = remove_strategy(r["prediction"])
+        reference = remove_strategy(r["context"][-1]["content"])
+
+        for _ in range(5):
+            print(input_text)
+        
+        sys.exit()
+
+
+
+    
 
         feedback, score = get_response(input_text.format(dialog=dialog, response=prediction, reference=reference))
         total_scores.append(score)
     except Exception as e:
-        print("An error occurred:", e)
-        break
+        print(f"Error processing data: {e}")
+        continue
 
-if total_scores:
-    print("Mean score:", np.mean(total_scores))
-else:
-    print("No scores to calculate mean.")
+print("Mean score:", np.mean(total_scores))
+
+
+
+
+
+
+
+
+        # print(input_text.format(dialog=dialog, response=prediction, reference=reference))
+        
+        # if counter > 5:
+        #     sys.out()
+
+        # counter = counter+1
+        # continue
+

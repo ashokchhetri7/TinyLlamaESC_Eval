@@ -66,9 +66,9 @@ def main( #makes two optional arguements
   
   if revision:
     model_name = model_name.replace("/", "_")
-    save_file = f"{model_name}_{revision}.json"
+    save_file = f"./GeneratedDataset{model_name}_{revision}.json"
   else:
-    save_file = f"{model_name}.json"
+    save_file = f"./GeneratedDataset{model_name}.json"
 
   fout = jsonlines.open(save_file, "w")
 

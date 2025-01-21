@@ -62,7 +62,7 @@ def remove_knowledge(x):
     x = x.replace("User:", "").strip()
     return x
 
-results = list(jsonlines.open("Ashokajou51_esconv-sorted-incontext-tinyllama-plm_epoch-2.json"))
+results = list(jsonlines.open("./GeneratedDataset/Ashokajou51_esconv-sorted-incontext-tinyllama-plm_epoch-2.json"))
 total_scores = []
 
 for r in tqdm(results):

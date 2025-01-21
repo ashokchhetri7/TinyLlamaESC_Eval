@@ -64,7 +64,7 @@ Score 3: The response is mostly coherent with some minor grammatical errors; the
 Score 4: The response is coherent, with minimal grammatical mistakes, and demonstrates a good flow that is easy to follow.
 Score 5: The response is perfectly fluent, with no grammatical errors, and demonstrates excellent command of language, making it very engaging and easy to understand."""
 
-results = list(jsonlines.open("/hdd1/ashok/TINY_EVAL/heegyu_esconv-tinyllama_epoch-3.json"))  # Load the specific file
+results = list(jsonlines.open("./GeneratedDataset/heegyu_esconv-tinyllama_epoch-3.json"))  # Load the specific file
 total_scores = []
 processed_records = 0  # Counter for the processed records
 

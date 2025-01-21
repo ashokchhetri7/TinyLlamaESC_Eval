@@ -1,16 +1,12 @@
 import requests
 from typing import List, Optional, Union
+import requests
+from typing import List, Optional, Union
 import jsonlines
 from tqdm.auto import tqdm
 import numpy as np
 
-
-def get_response(
-    prompt: str,
-    system: Optional[str] = "",
-    temperature: Optional[float] = 1.0,
-    greedy: Optional[bool] = False,
-    ):
+def get_response(prompt: str, system: Optional[str] = "", temperature: Optional[float] = 1.0, greedy: Optional[bool] = False):
     """
     Get a response from the model.
     """
@@ -20,20 +16,18 @@ def get_response(
         "temperature": temperature,
         "greedy": greedy,
     }
-    #Server1 http://34.147.57.161:35020/instruct
-    #Server1 http://35.204.127.181:35020/instruct
-    # output = requests.post("http://35.204.127.181:35020/instruct", json=body).json()
-    
     output = requests.post("http://34.147.57.161:35020/instruct", json=body).json()
     response = output['response']
     print(output)
-    score = response.split("[RESULT]", 1)[1].strip()
-    if "\n" in score:
-        score = score.split("\n", 1)[0]
-
-    return output['response'], int(score)
-
-
+    try:
+        score = response.split("[RESULT]", 1)[1].strip()
+        if "\n" in score:
+            score = score.split("\n", 1)[0]
+        score = int(score)  # Ensure score is an integer
+    except IndexError:
+        print("Error parsing score from response:", response)
+        score = 0  # Default score or handle appropriately
+    return output['response'], score
 
 
 input_text = """###The instruction to evaluate: 
@@ -55,41 +49,36 @@ Score 1: The response is incoherent, filled with grammatical errors, and difficu
 Score 2: The response has noticeable grammatical issues and lacks smoothness in delivery, impacting comprehension.
 Score 3: The response is mostly coherent with some minor grammatical errors; the flow is acceptable but not seamless.
 Score 4: The response is coherent, with minimal grammatical mistakes, and demonstrates a good flow that is easy to follow.
-Score 5: The response is perfectly fluent, with no grammatical errors, and demonstrates excellent command of language, making it very engaging and easy to understand.  """
+Score 5: The response is perfectly fluent, with no grammatical errors, and demonstrates excellent command of language, making it very engaging and easy to understand. """
 
-test_type = "Fluency"
 
-#Before it was suggestion t1, then identification, now it's fluency
-
+# Function to remove strategy text, if present
 def remove_strategy(x):
     return x.split("]", 1)[1].strip() if "]" in x else x
 
-results = list(jsonlines.open("/hdd1/ashok/TINY_EVAL/heegyu_esconv-tinyllama_epoch-3.json"))
+# Load the JSON file format
+results = list(jsonlines.open("./gen.txt"))
 total_scores = []
 
 for r in tqdm(results):
     try:
-        dialog = ""
-        if len(r["context"]) > 1:
-            for u in r["context"][-2:]:
-                if 'content' in u:
-                    dialog += remove_strategy(u['content']) + " "
-        else:
-            dialog = ""
+        # Map the fields from the JSON entry to input_text variables
+        dialog = r.get('post', '')
+        prediction = r.get('generation', '')
+        reference = r.get('response', '')
 
-        prediction = remove_strategy(r["prediction"])
-
-        if 'content' in r["context"][-1]:
-            reference = remove_strategy(r["context"][-1]['content'])
-        else:
-            reference = ""
+        # Process the dialogue, prediction, and reference through remove_strategy if needed
+        dialog = remove_strategy(dialog)
+        prediction = remove_strategy(prediction)
+        reference = remove_strategy(reference)
 
         feedback, score = get_response(input_text.format(dialog=dialog, response=prediction, reference=reference))
         total_scores.append(score)
-    except:
-        from traceback import print_exc
-        print_exc()
+    except Exception as e:
+        print("An error occurred:", e)
         break
 
-print("Mean score:", np.mean(total_scores))
-print("{test_type} Checking: in  Tinyllama")
+if total_scores:
+    print("Mean score:", np.mean(total_scores))
+else:
+    print("No scores to calculate mean.")

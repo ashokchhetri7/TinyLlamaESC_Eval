@@ -74,27 +74,16 @@ The evaluation script processes the generated dataset, calculates scores based o
 
 ### Results Table
 
-#### Table: Results for Different Model Configurations
+#### Results for Different Model Configurations
 
-\label{table:tableforablation}
-\begin{tabular*}{\hsize}{@{}@{\extracolsep{\fill}}ccc|ccccc@{}}
-\toprule
-\multicolumn{3}{c|}{\textbf{Model Configuration}} & \multicolumn{5}{c}{\textbf{Rubrics Scores}} \\
-\cmidrule(lr){1-3}
-\cmidrule(lr){4-8}
-\textbf{Model} & \textbf{Context Size} & \textbf{External Knowledge} & \textbf{Empathy} & \textbf{Fluency} & \textbf{Identify} & \textbf{Comfort} & \textbf{Suggest}\\
-\midrule
-KEMI & Blocks & strategy-comet-heal & 2.04 & 2.16 & 1.85 & 1.75 & 1.51 \\
-KEMI & Blocks & strategy & 2.04 & 2.50 & 1.79 & 1.98 & 1.51 \\
-\midrule
-Tiny-Know & Blocks & strategy-comet-heal & 2.24 & 2.48 & 1.86 & 1.70 & 1.79 \\
-Tiny-Stand & Blocks & strategy & 2.29 & 2.56 & 2.11 & 2.23 & 2.44 \\
-\midrule
-Tiny-Role & Whole & strategy-comet-heal-role & 1.87 & 2.03 & 1.72 & 1.50 & 1.48 \\
-Tiny-Stand & Whole & strategy & \textbf{2.30} & \textbf{2.57} & \textbf{2.14} & \textbf{2.25} & \textbf{2.74} \\
-\bottomrule
-\end{tabular*}
-\end{table}
+| Model        | Context Size | External Knowledge       | Empathy | Fluency | Identify | Comfort | Suggest |
+|--------------|--------------|--------------------------|---------|---------|----------|---------|---------|
+| KEMI         | Blocks       | strategy-comet-heal      | 2.04    | 2.16    | 1.85     | 1.75    | 1.51    |
+| KEMI         | Blocks       | strategy                 | 2.04    | 2.50    | 1.79     | 1.98    | 1.51    |
+| Tiny-Know    | Blocks       | strategy-comet-heal      | 2.24    | 2.48    | 1.86     | 1.70    | 1.79    |
+| Tiny-Stand   | Blocks       | strategy                 | 2.29    | 2.56    | 2.11     | 2.23    | 2.44    |
+| Tiny-Role    | Whole        | strategy-comet-heal-role | 1.87    | 2.03    | 1.72     | 1.50    | 1.48    |
+| Tiny-Stand   | Whole        | strategy                 | **2.30**| **2.57**| **2.14** | **2.25**| **2.74**|
 
 ---
 
